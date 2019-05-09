@@ -65,3 +65,22 @@ ecd xs@(x:xs') = x : helper xs x
         helper xs@(x:xs') y 
             | x == y    = helper xs' y 
             | otherwise = x : helper xs x
+
+pack :: (Eq a) => [a] -> [[a]]
+pack ys@(y:ys') = helper [y] ys' []
+        where
+            helper current [] acc = (current : acc)
+            helper current@(c:_) ys@(y:ys') acc 
+                | c == y    = helper (y:current) ys' acc
+                | otherwise = current : helper [y] ys' (acc)
+           
+pack' :: (Eq a) => [a] -> [[a]]
+pack' [] = []
+pack' ys@(y:ys') = take n ( repeat y) : pack' (drop n ys)
+            where n = length $ takeWhile ( == y) ys 
+
+rleEncode :: String -> [(Int, Char)]
+rleEncode string = map (\xs@(x:xs') -> (length xs, x)) $ pack string
+
+rleDecode :: [(Int, Char)] -> String
+rleDecode code = concatMap (\(n, c) -> take n (repeat c)) code
