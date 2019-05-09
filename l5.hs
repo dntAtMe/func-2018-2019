@@ -16,5 +16,8 @@ approx n = foldr (\elem acc -> acc + 1 / foldl (*) 1 [1..elem]) 0 [1..n]
 -- 56
 calc xs = foldl (\acc elem -> acc + (-1)^(elem+1) * xs!!(elem-1)) 0 [1..length xs]
 
-avg :: (Fractional a) => [a] -> a
-avg xs = undefined
+avg :: (Fractional a) => [a] -> (a, a)
+avg xs =  (m, ( foldl (\acc elem -> acc + (elem - m)^2) 0 xs) /  n)
+    where
+        n = fromIntegral $ length xs
+        m = sum xs / n
